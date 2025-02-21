@@ -1,0 +1,46 @@
+     1                                  section .text
+     2                                  global leaverng
+     3                                  
+     4                                  leaverng:
+     5 00000000 55                          push    ebp
+     6 00000001 89E5                        mov     ebp, esp
+     7                                  
+     8                                  ;allocate local variables
+     9 00000003 83EC04                      sub     esp, 4
+    10 00000006 57                          push    edi
+    11                                  
+    12                                  ;get variables to register
+    13 00000007 8A450C                      mov     al,[ebp + 12] ;a
+    14 0000000A 8A6510                      mov     ah,[ebp + 16] ;b
+    15 0000000D 8B4D08                      mov     ecx,[ebp + 8]; string
+    16 00000010 89CF                        mov     edi, ecx
+    17                                  
+    18                                  find_wanted:
+    19 00000012 8A11                        mov     dl, [ecx]
+    20 00000014 41                          inc     ecx
+    21 00000015 84D2                        test    dl, dl
+    22 00000017 740D                        jz      end
+    23                                  
+    24                                  ;compare to a
+    25 00000019 38C2                        cmp     dl, al
+    26 0000001B 72F5                        jb      find_wanted
+    27                                  ;compare to b
+    28 0000001D 38E2                        cmp     dl, ah
+    29 0000001F 77F1                        ja      find_wanted
+    30                                  
+    31                                  write:
+    32 00000021 8817                        mov     [edi],  dl
+    33 00000023 47                          inc     edi
+    34 00000024 EBEC                        jmp     find_wanted
+    35                                  
+    36                                  end:
+    37                                  ;place null
+    38 00000026 B800000000                  mov     eax, 0
+    39 0000002B 8907                        mov     [edi], eax
+    40                                  
+    41 0000002D 8B4508                      mov     eax, [ebp + 8]
+    42 00000030 5F                          pop     edi
+    43                                  
+    44 00000031 89EC                        mov     esp, ebp
+    45 00000033 5D                          pop     ebp
+    46 00000034 C3                          ret

@@ -1,0 +1,49 @@
+     1                                  section .text
+     2                                  global leavelastndig
+     3                                  
+     4                                  leavelastndig:
+     5 00000000 55                          push    ebp
+     6 00000001 89E5                        mov     ebp, esp
+     7 00000003 8B4D08                      mov     ecx, [ebp +8] ;string
+     8 00000006 8B550C                      mov     edx, [ebp + 12] ;n
+     9                                  
+    10                                  ;local variables
+    11 00000009 83EC04                      sub     esp, 4
+    12 0000000C 53                          push    ebx
+    13 0000000D 89CB                        mov     ebx, ecx
+    14                                  
+    15                                  findnum:
+    16 0000000F 8A01                        mov     al, [ecx] ; moving char argument into lsb of eax
+    17 00000011 41                          inc     ecx;
+    18 00000012 84C0                        test    al, al ;
+    19 00000014 740D                        jz      end ; jump if 0(null)
+    20 00000016 3C30                        cmp     al, '0'
+    21 00000018 72F5                        jb      findnum
+    22 0000001A 3C39                        cmp     al, '9'
+    23 0000001C 77F1                        ja      findnum
+    24                                  
+    25                                  save_num:
+    26 0000001E 8803                        mov     [ebx], al
+    27 00000020 43                          inc     ebx
+    28 00000021 EBEC                        jmp     findnum
+    29                                  
+    30                                  ;ebx where null should be
+    31                                  ;ecx 1 after original null
+    32                                  ;edx n
+    33                                  ;eax unused at this point
+    34                                  
+    35                                  end:
+    36                                  ;null so string ends
+    37 00000023 30C0                        xor     al, al
+    38 00000025 8803                        mov     [ebx], al
+    39                                  
+    40                                  ;address where the last n digits start
+    41 00000027 89D8                        mov     eax, ebx
+    42 00000029 29D0                        sub     eax, edx
+    43                                  
+    44                                  ; popping local variables
+    45 0000002B 5B                          pop     ebx
+    46                                  
+    47 0000002C 89EC                        mov     esp, ebp
+    48 0000002E 5D                          pop     ebp
+    49 0000002F C3                          ret

@@ -1,0 +1,68 @@
+	.data
+prompt:	.asciz "Enter string:\n"
+buf: 	.space 100
+
+	.text
+	.globl main
+
+main:
+	li a7, 4
+	la a0, prompt
+	ecall
+	
+	li a7, 8
+	la a0, buf
+	li a1, 100
+	ecall 
+	
+	la t0, buf # buf start adress
+
+	
+lenght:
+	lb t1, (t0) # value of adress
+	addi t6, t6, 1 # lenght of text
+	addi t0, t0, 1 # add 1 to adress
+	bnez t1, lenght
+	
+	
+outloop:
+	la t0, buf
+	la t1, buf  # adress of first element
+	la t3, buf  
+	addi t3, t3, 1 # adding one to adress of element 1 to get element 2
+
+loop:
+
+	lb t2, (t1)  # val of first element
+	lb t4, (t3)  # val of second element
+	beqz t4, next
+	bgt t2, t4, swap
+	addi t1, t1, 1
+	addi t3, t3, 1
+	j loop
+	
+swap:
+	mv t5, t2 	#temp register for swapping
+	sb t4, (t1)
+	sb t5, (t3)
+	j loop
+
+next:
+	addi t6, t6, -1
+	bgtz t6, outloop
+
+end:
+	li a7, 4
+	la a0, buf
+	ecall
+	
+	li a7, 10
+	ecall
+	
+	
+	
+	
+	
+	
+	
+	

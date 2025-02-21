@@ -1,0 +1,35 @@
+	.data
+prompt:	.asciz "Enter string:\n"
+buf: 	.space 100
+
+	.text
+	.globl main
+
+main:
+	li a7, 4
+	la a0, prompt
+	ecall
+	
+	li a7, 8
+	la a0, buf
+	li a1, 100
+	ecall 
+	
+	la t0, '0'
+	la t1, '9'
+	
+	la t2, buf
+	lb t3, (t2)
+	beqz t3, end
+	
+loop:
+	bgt t3, t1, next
+	blt t3, t0, next
+	
+	
+	
+	
+	
+	
+	
+	

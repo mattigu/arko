@@ -1,0 +1,72 @@
+     1                                  section .text
+     2                                  global leavelongestnum
+     3                                  
+     4                                  leavelongestnum:
+     5 00000000 55                          push    ebp
+     6 00000001 89E5                        mov     ebp, esp
+     7 00000003 8B5508                      mov     edx, [ebp +8]; string start
+     8                                  
+     9                                  ;allocate local var
+    10 00000006 83EC08                      sub     esp, 8
+    11 00000009 53                          push    ebx
+    12 0000000A 57                          push    edi
+    13                                  
+    14 0000000B 31DB                        xor     ebx, ebx
+    15 0000000D 31C0                        xor     eax, eax
+    16                                  
+    17 0000000F EB13                        jmp     find_digit
+    18                                  
+    19                                  reset_longest:
+    20                                  ;if ebx bigger than eax
+    21 00000011 39C3                        cmp     ebx, eax
+    22 00000013 7704                        ja      set_new_longest
+    23                                  
+    24                                  ;reset current longest counter
+    25 00000015 31DB                        xor     ebx, ebx
+    26 00000017 EB0B                        jmp     find_digit
+    27                                  
+    28                                  set_new_longest:
+    29                                  ;store new longest
+    30 00000019 89D8                        mov     eax, ebx
+    31                                  ;store it's starting address
+    32 0000001B 89D7                        mov     edi, edx
+    33 0000001D 29DF                        sub     edi, ebx
+    34 0000001F 83EF01                      sub     edi, 1
+    35                                  ;reset current longest counter
+    36 00000022 31DB                        xor     ebx, ebx
+    37                                  
+    38                                  ;eax len of longest seq so far
+    39                                  ;edx iterator over string
+    40                                  ;ebx current seq lenght
+    41                                  ;ecx current char value
+    42                                  
+    43                                  find_digit:
+    44                                  
+    45 00000024 8A0A                        mov     cl, [edx]
+    46 00000026 42                          inc     edx
+    47 00000027 84C9                        test    cl, cl
+    48 00000029 740D                        jz      end
+    49 0000002B 80F930                      cmp     cl, '0'
+    50 0000002E 72E1                        jb      reset_longest
+    51 00000030 80F939                      cmp     cl, '9'
+    52 00000033 77DC                        ja      reset_longest
+    53                                  
+    54 00000035 43                          inc     ebx
+    55 00000036 EBEC                        jmp     find_digit
+    56                                  
+    57                                  end:
+    58                                  ;popping local variables
+    59 00000038 89C3                        mov     ebx, eax
+    60 0000003A 01FB                        add     ebx, edi
+    61 0000003C B900000000                  mov     ecx, 0
+    62 00000041 890B                        mov     [ebx], ecx
+    63                                  
+    64 00000043 89F8                        mov     eax, edi
+    65                                  
+    66 00000045 5F                          pop     edi
+    67 00000046 5B                          pop     ebx
+    68                                  
+    69                                  
+    70 00000047 89EC                        mov     esp, ebp
+    71 00000049 5D                          pop     ebp
+    72 0000004A C3                          ret
